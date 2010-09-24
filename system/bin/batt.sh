@@ -1,5 +1,6 @@
 #!/system/bin/sh
 
+expr="busybox expr"
 
 #Added Beta Code 1.0 for usb-ac charging variants by Decad3nce
 #Battery Tweak Beta by collin_ph
@@ -52,7 +53,7 @@ mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 
 launchCFStweaks()
 {
-navPID=`pidof "com.google.android.apps.maps:driveabout"`
+navPID=`busybox pidof "com.google.android.apps.maps:driveabout"`
 if "$navPID" > /dev/nul
  then 
  disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
@@ -152,9 +153,9 @@ log "collin_ph: Done Increasing Performance"
 set_powersave_bias()
 {
     capacity=`expr $capacity '*' 10`
-    bias=`expr 1000 "-" $capacity`
-    bias=`expr $bias "/" $battery_divisor`
-    bias=`echo $bias | awk '{printf("%d\n",$0+=$0<0?-0.5:0.5)}'`
+    bias=`$expr 1000 "-" $capacity`
+    bias=`$expr $bias "/" $battery_divisor`
+    bias=`echo $bias | busybox awk '{printf("%d\n",$0+=$0<0?-0.5:0.5)}'`
     if "$bias" != "$last_bias" > /dev/nul
        then
        log "collin_ph: Setting powersave bias to $bias"
@@ -171,11 +172,11 @@ set_powersave_bias()
 set_max_clock()
 {
     temp=`expr 100 "-" $capacity`
-		temp=`expr $temp "*" $cpu_max_underclock_perc`
-		temp=`expr $temp "/" 100`
-		temp=`expr $temp "*" $max_freq_on_battery`
-		temp=`expr $temp "/" 100`
-		temp=`expr $max_freq_on_battery "-" $temp`
+		temp=`$expr $temp "*" $cpu_max_underclock_perc`
+		temp=`$expr $temp "/" 100`
+		temp=`$expr $temp "*" $max_freq_on_battery`
+		temp=`$expr $temp "/" 100`
+		temp=`$expr $max_freq_on_battery "-" $temp`
     
     if "$temp" != "$current_max_clock" > /dev/nul
        then
