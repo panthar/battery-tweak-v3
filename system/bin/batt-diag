@@ -1,8 +1,12 @@
 #!/system/bin/sh
 
 # mount -t rfs -o remount,rw /dev/block/stl9 /system
+#  > /dev/nul
 #
-#
+
+pidof="busybox pidof"
+expr="busybox expr"
+which="busybox which"
 
 #batt-diag
 #displays information necessary to debug the collin_ph battery tweak
@@ -13,15 +17,15 @@ echoit ()
 {
 echo "$1" | fold -s -w 45
 }
-who=`whoami`
-if [ "$who" != "root" ]
+who=`busybox whoami`
+if "$who" != "root" > /dev/nul
  then
  echoit "batt-diag must be ran as root."
  echoit "Press enter to attempt to run as root"
  echoit "Or press 1 then enter to continue without attempting to gain root access"
  echoit ""
  read opt
- if [ "$opt" -eq "1" ] 
+ if "$opt" -eq "1" > /dev/nul
   then
 	echoit "Continuing..."
  else
@@ -39,17 +43,17 @@ cat $1
 echo "Collin_ph Battery diagnostic utility"
 echo "batt-diag -v for verbose diagnostics"
 echo "Checking if batt.sh service is running"
-out=`pidof batt.sh`
+out=`$pidof batt.sh`
 echo "pidof batt.sh: $out"
 echo ""
 echo "Checking dependencies. If any dependency is blank the battery tweak may not function and should be disabled"
-out=`which sleep`
+out=`$which sleep`
 echo "sleep: $out"
-out=`which mount`
+out=`$which mount`
 echo "mount: $out"
-out=`which expr`
+out=`$which expr`
 echo "expr : $out"
-out=`which log`
+out=`$which log`
 echo "log : $out"
 echo ""
 echo "Checking tweak files and permissions"
@@ -131,7 +135,7 @@ cat /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state
 echo "---End of CPU Time in each Frequency----"
 echo ""
 
-if [ "$1" = "-v" ]
+if "$1" = "-v" > /dev/nul
    then
 	 echo "Displaying Verbose Settings."
 	 echo "----System Properties----"
@@ -139,7 +143,7 @@ if [ "$1" = "-v" ]
 	 echo "----End of System Properties----"
    echo "----Running Tasks----"
    out=`which top`
-	 if [ "$out" ]
+	 if "$out" > /dev/nul
 	    then
 			top -n 1
 			else
