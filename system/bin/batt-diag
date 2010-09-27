@@ -1,9 +1,5 @@
 #!/system/bin/sh
 
-# mount -t rfs -o remount,rw /dev/block/stl9 /system
-#  > /dev/nul
-#
-
 pidof="busybox pidof"
 expr="busybox expr"
 which="busybox which"
@@ -117,10 +113,10 @@ displayparm "/sys/class/power_supply/battery/health"
 echo ""
 echo "----Current Battery Temp----"
 tmp=`cat /sys/class/power_supply/battery/batt_temp`
-c=`expr "$tmp" "/" 10`
-f=`expr "$tmp" "*" 18`
-f=`expr "$f" "/" 100`
-f=`expr "$f" "+" 32`
+c=`$expr "$tmp" "/" 10`
+f=`$expr "$tmp" "*" 18`
+f=`$expr "$f" "/" 100`
+f=`$expr "$f" "+" 32`
 
 echo " $f F / $c C"
 echo "----End of Battery Temp----"
