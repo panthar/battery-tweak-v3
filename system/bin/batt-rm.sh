@@ -7,22 +7,22 @@ application="Battery Tweak Script";
 
 RemoveAllFiles()
 {
-   mount -o rw,remount /dev/block/mtd3 /system
+   mount -t rfs -o remount,rw /dev/block/stl9 /system
    rm /system/bin/batt.sh;
    rm /system/bin/batt-cfg;
    rm /system/etc/batt.conf;
    rm /system/bin/batt-diag;
    log "collin_ph: Removed $application";
    rm /system/bin/batt-rm.sh;
-   mount -o remount,ro /
+   mount -t rfs -o remount,ro /dev/block/stl9 /system
    exit;
 }
 
 DontRemoveFiles()
 {
-   mount -o rw,remount /dev/block/mtd3 /system 
+   mount -t rfs -o remount,rw /dev/block/stl9 /system 
    log "collin_ph: Canceled Removal of $application";
-   mount -o remount,ro /
+   mount -t rfs -o remount,ro /dev/block/stl9 /system
    exit;
 }
 
