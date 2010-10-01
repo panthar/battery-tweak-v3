@@ -1,9 +1,5 @@
 #!/system/bin/sh
 
-pidof="busybox pidof"
-expr="busybox expr"
-which="busybox which"
-
 #batt-diag
 #displays information necessary to debug the collin_ph battery tweak
 #may be piped to more, or sent to a text file.
@@ -13,7 +9,7 @@ echoit ()
 {
 echo "$1" | fold -s -w 45
 }
-who=`busybox whoami`
+who=`whoami`
 if "$who" != "root" > /dev/nul
  then
  echoit "batt-diag must be ran as root."
