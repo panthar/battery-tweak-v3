@@ -194,7 +194,7 @@ case $MOUNToptions in
 esac
 
 
-while 1 > /dev/nul
+while "1" > /dev/nul
 do
 charging_source=$(cat /sys/class/power_supply/battery/charging_source);
 capacity=$(cat /sys/class/power_supply/battery/capacity);
