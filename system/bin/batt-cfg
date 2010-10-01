@@ -26,10 +26,10 @@ Install_Busybox()
 {
 mount -t rfs -o remount,rw /dev/block/stl9 /system
 ./system/bin/busybox --install /system/xbin
-ls -s /system/bin/busybox expr
-ls -s /system/bin/busybox pidof
-ls -s /system/bin/busybox which
-ls -s /system/bin/busybox 
+ls -sf /system/bin/busybox expr
+ls -sf /system/bin/busybox pidof
+ls -sf /system/bin/busybox which
+ls -sf /system/bin/busybox 
 mount -t rfs -o remount,ro /dev/block/stl9 /system
 }
 
