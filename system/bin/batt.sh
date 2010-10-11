@@ -1,7 +1,5 @@
 #!/system/bin/sh
 
-expr="busybox expr"
-
 #Added Beta Code 1.0 for usb-ac charging variants by Decad3nce
 #Battery Tweak Beta by collin_ph
 #configurable options
@@ -43,9 +41,9 @@ mount -o $1 /dev -t devpts
 mount -o $1 /proc -t proc
 mount -o $1 /sys -t sysfs
 mount -o $1 /mnt/asec -t tmpfs
-mount -o $1 /system -t yaffs2
-mount -o $1 /data -t yaffs2
-mount -o $1 /cache -t yaffs2
+mount -o $1 /system -t rfs
+mount -o $1 /data -t rfs
+mount -o $1 /cache -t rfs
 mount -o $1 /mnt/sdcard -t vfat
 mount -o $1 /mnt/secure/asec -t vfat
 mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
@@ -153,8 +151,8 @@ log "collin_ph: Done Increasing Performance"
 set_powersave_bias()
 {
     capacity=`expr $capacity '*' 10`
-    bias=`$expr 1000 "-" $capacity`
-    bias=`$expr $bias "/" $battery_divisor`
+    bias=`expr 1000 "-" $capacity`
+    bias=`expr $bias "/" $battery_divisor`
     bias=`echo $bias | busybox awk '{printf("%d\n",$0+=$0<0?-0.5:0.5)}'`
     if "$bias" != "$last_bias" > /dev/nul
        then
@@ -172,11 +170,11 @@ set_powersave_bias()
 set_max_clock()
 {
     temp=`expr 100 "-" $capacity`
-		temp=`$expr $temp "*" $cpu_max_underclock_perc`
-		temp=`$expr $temp "/" 100`
-		temp=`$expr $temp "*" $max_freq_on_battery`
-		temp=`$expr $temp "/" 100`
-		temp=`$expr $max_freq_on_battery "-" $temp`
+		temp=`expr $temp "*" $cpu_max_underclock_perc`
+		temp=`expr $temp "/" 100`
+		temp=`expr $temp "*" $max_freq_on_battery`
+		temp=`expr $temp "/" 100`
+		temp=`expr $max_freq_on_battery "-" $temp`
     
     if "$temp" != "$current_max_clock" > /dev/nul
        then
