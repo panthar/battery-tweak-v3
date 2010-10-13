@@ -103,14 +103,14 @@ min_freq_on_USBpower=400000
 restart()
 {
 echoit "Starting batt.sh"
-#nohup /system/bin/batt.sh 2>/dev/nul &
+#nohup /system/bin/batt.sh 2 > /dev/nul &
 start collin_ph
 t=`pidof batt.sh`
-if [ "$t" ]
+if "$t" /dev/nul
    then
 	 echoit "Started"
    else
-	 nohup /system/bin/batt.sh 2>/dev/nul &
+	 nohup /system/bin/batt.sh 2 > /dev/nul &
 	 echoit "NOTE: when you exit ADB or terminal, you may have to hit CTRL-C"
 fi
 
