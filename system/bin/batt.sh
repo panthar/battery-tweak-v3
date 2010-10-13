@@ -51,7 +51,7 @@ mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 
 launchCFStweaks()
 {
-navPID=`busybox pidof "com.google.android.apps.maps:driveabout"`
+navPID=`pidof "com.google.android.apps.maps:driveabout"`
 if "$navPID" > /dev/nul
  then 
  disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
@@ -153,7 +153,7 @@ set_powersave_bias()
     capacity=`expr $capacity '*' 10`
     bias=`expr 1000 "-" $capacity`
     bias=`expr $bias "/" $battery_divisor`
-    bias=`echo $bias | busybox awk '{printf("%d\n",$0+=$0<0?-0.5:0.5)}'`
+    bias=`echo $bias | awk '{printf("%d\n",$0+=$0<0?-0.5:0.5)}'`
     if "$bias" != "$last_bias" > /dev/nul
        then
        log "collin_ph: Setting powersave bias to $bias"
@@ -238,4 +238,5 @@ fi
 done
 
 
-fi #end here if enabled
+fi
+#end here if enabled
