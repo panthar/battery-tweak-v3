@@ -4,13 +4,15 @@
 #displays information necessary to debug the collin_ph battery tweak
 #may be piped to more, or sent to a text file.
 #you may upload batt-diag logs to joe@primoweb.com for diagnosis.
+#changed how su was handled thanks to onicrom
 
 echoit ()
 {
 echo "$1" | fold -s -w 45
 }
-who=`whoami`
-if "$who" != "root" > /dev/nul
+
+/system/bin/id |grep root > /dev/null 2>&1
+if $? -ne 0 /dev/nul
  then
  echoit "batt-diag must be ran as root."
  echoit "Press enter to attempt to run as root"
