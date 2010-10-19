@@ -4,20 +4,21 @@
 #Battery Tweak Beta by collin_ph
 #configurable options
 #moved to /system/etc/batt.conf
-
+echo="hello"
+log "collin_ph: audiofix enabled, starting up"
 . /system/etc/batt.conf
-if "$enabled" -gt "0" > /dev/nul
- then
-if "$audio_fix" -gt "0" > /dev/nul
-   then
-	 log "collin_ph: audiofix enabled, disabling stagefright"
-	 setprop media.stagefright.enable-player false
-	 else
-	 log "collin_ph: audiofix disabled, enabling stagefright"
-	 setprop media.stagefright.enable-player true
-fi
+#if "$enabled" -gt "0" > /dev/nul
+# then
+#if "$audio_fix" -gt "0" > /dev/nul
+#   then
+#	 log "collin_ph: audiofix enabled, disabling stagefright"
+#	 setprop media.stagefright.enable-player false
+#	 else
+#	 log "collin_ph: audiofix disabled, enabling stagefright"
+#	 setprop media.stagefright.enable-player true
+#fi
 	  
- 
+log "collin_ph: audiofix enabled, nothing???"
  
 #Initialization variables
 #Dont mess with these.
@@ -35,6 +36,7 @@ last_capacity=0;
 launchMOUNToptions()
 {
 log "collin_ph: remounting file systems $1"
+log "collin_ph: status is here the problem???!1"
 
 mount -o $1 / -t rootfs
 mount -o $1 /dev -t devpts
@@ -44,14 +46,17 @@ mount -o $1 /mnt/asec -t tmpfs
 mount -o $1 /system -t rfs
 mount -o $1 /data -t rfs
 mount -o $1 /cache -t rfs
-mount -o $1 /mnt/sdcard -t vfat
+mount -o $1 /sdcard -t vfat
 mount -o $1 /mnt/secure/asec -t vfat
 mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 }
+log "collin_ph: status is here the problem???!2"
 
 launchCFStweaks()
 {
 navPID=`pidof "com.google.android.apps.maps:driveabout"`
+log "collin_ph: status is here the problem???!3"
+
 if "$navPID" > /dev/nul
  then 
  disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
@@ -220,11 +225,13 @@ if "$charging_source" != "$last_source" > /dev/nul
 
 fi
 
-
+echo "charging maybe??"
+log "collin_ph: charging is a bitch:"
 if "$charging_source" = "0" > /dev/nul
   then
   if "$capacity" != "$last_capacity" > /dev/nul
     then
+    log "this fucking thing is pissing me off:"
     last_capacity=$capacity
     log "collin_ph: status = Charging Source: charging_source=$charging_source"
     case $cpu_limiting_method in
@@ -234,9 +241,8 @@ if "$charging_source" = "0" > /dev/nul
 
   fi
 fi
-
+echo="yup must be...."
 done
-
-
 fi
+log "collin_ph: status is here the problem???!12"
 #end here if enabled
