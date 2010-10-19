@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+#whoami root user verification thanks to onicrom
+
 echoit ()
 {
 echo "$1" | fold -s -w 45
