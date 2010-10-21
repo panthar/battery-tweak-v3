@@ -47,11 +47,11 @@ echoit ""
 #this may seem redundant because they are included in load_defaults
 #this is only here in case the person upgraded from a prior version
 #sets sensible defaults in that case
-audio_fix=0
-Busybox=0
-CFStweaks=0
+#audio_fix=0
+#Busybox=0
+#CFStweaks=0
 MOUNToptions=0
-enabled=1
+#enabled=1
 #end of sensible upgrade defaults
 . /system/etc/batt.conf
 
@@ -81,11 +81,11 @@ fi
 
 load_defaults()
 {
-audio_fix=0
+#audio_fix=0
 Busybox=0
 MOUNToptions=1
-CFStweaks=0
-enabled=1
+#CFStweaks=0
+#enabled=1
 cpu_max_underclock_perc=40
 cpu_limiting_method=1
 max_freq_on_battery=800000
@@ -351,10 +351,10 @@ if "$tpid" -gt 0 > /dev/nul
 
 echoit "Saving Settings..."
 mount -t rfs -o remount,rw /dev/block/stl9 /system
-echo "audio_fix=$audio_fix" > /system/etc/batt.conf
-echo "CFStweaks=$CFStweaks" >> /system/etc/batt.conf
+#echo "audio_fix=$audio_fix" > /system/etc/batt.conf
+#echo "CFStweaks=$CFStweaks" >> /system/etc/batt.conf
 echo "MOUNToptions=$MOUNToptions" >>  /system/etc/batt.conf
-echo "enabled=$enabled" >> /system/etc/batt.conf
+#echo "enabled=$enabled" >> /system/etc/batt.conf
 echo "Busybox=$Busybox" >> /system/etc/batt.conf
 echo "cpu_limiting_method=$cpu_limiting_method" >> /system/etc/batt.conf
 echo "min_freq_on_battery=$min_freq_on_battery" >> /system/etc/batt.conf
@@ -405,16 +405,16 @@ echoit "[3] Customize settings"
 
 disp=`get_disp $enabled`
 echoit "[4] $disp Battery Tweak Entirely"
-disp=`get_disp $CFStweaks`
-echoit "[5] $disp CFS Tweaks "
+#disp=`get_disp $CFStweaks`
+#echoit "[5] $disp CFS Tweaks "
 disp=`get_disp $Busybox`
 echoit "[6] $disp Install Busybox)"
-disp=`get_disp $MOUNToptions`
-echoit "[7] $disp Disk Boost"
-disp=`get_disp $audio_fix`
-disp2=`toggle $audio_fix`
-disp2=`get_disp $disp2`
-echoit "[8] $disp Audio Fix ($disp2 Stagefright)"
+#disp=`get_disp $MOUNToptions`
+#echoit "[7] $disp Disk Boost"
+#disp=`get_disp $audio_fix`
+#disp2=`toggle $audio_fix`
+#disp2=`get_disp $disp2`
+#echoit "[8] $disp Audio Fix ($disp2 Stagefright)"
 echoit "[9] Save Changes & Exit"
 echoit "[Enter]: Exit Without Saving Changes"
 read choice
