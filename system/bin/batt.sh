@@ -52,36 +52,36 @@ mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 }
 log "collin_ph: status is here the problem???!2"
 
-launchCFStweaks()
-{
-navPID=`pidof "com.google.android.apps.maps:driveabout"`
+#launchCFStweaks()
+#{
+#navPID=`pidof "com.google.android.apps.maps:driveabout"`
 log "collin_ph: status is here the problem???!3"
 
-if "$navPID" > /dev/nul
- then 
- disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
- else
- if "$CFSstate" != "enabled" > /dev/nul
- then
- mount -t debugfs none /sys/kernel/debug
- log "collin_ph: Changed sched_features (CFS Tweaks Enabled)"
- echo "NO_NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
- umount /sys/kernel/debug
- CFSstate="enabled"
- fi
-fi
+#if "$navPID" > /dev/nul
+# then 
+# disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
+# else
+# if "$CFSstate" != "enabled" > /dev/nul
+# then
+# mount -t debugfs none /sys/kernel/debug
+# log "collin_ph: Changed sched_features (CFS Tweaks Enabled)"
+# echo "NO_NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
+# umount /sys/kernel/debug
+# CFSstate="enabled"
+# fi
+#fi
 
 }
-disableCFStweaks()
+#disableCFStweaks()
 {
-if "$CFSstate" != "disabled"> /dev/nul
-then
-mount -t debugfs none /sys/kernel/debug
-log "collin_ph: Changed sched_features $1"
-echo "NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-umount /sys/kernel/debug
-CFSstate="disabled"
-fi
+#if "$CFSstate" != "disabled"> /dev/nul
+#then
+#mount -t debugfs none /sys/kernel/debug
+#log "collin_ph: Changed sched_features $1"
+#echo "NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
+#umount /sys/kernel/debug
+#CFSstate="disabled"
+#fi
 }
 
 increase_battery()
@@ -89,11 +89,11 @@ increase_battery()
 log "collin_ph: Increasing Battery"
 #New Performance Tweaks
 mount -t rfs -o remount,rw /dev/block/stl9 /system
-if $LEDfix > /dev/nul 
-   then
-   echo 0 > /sys/class/leds/amber/brightness
-   echo 0 > /sys/class/leds/green/brightness
-fi
+#if $LEDfix > /dev/nul 
+#   then
+#   echo 0 > /sys/class/leds/amber/brightness
+#   echo 0 > /sys/class/leds/green/brightness
+#fi
 current_polling_interval=$polling_interval_on_battery;
 echo 0 > /proc/sys/vm/swappiness
 echo 0 > /proc/sys/vm/dirty_expire_centisecs
@@ -243,6 +243,6 @@ if "$charging_source" = "0" > /dev/nul
 fi
 echo="yup must be...."
 done
-fi
+#fi
 log "collin_ph: status is here the problem???!12"
 #end here if enabled
