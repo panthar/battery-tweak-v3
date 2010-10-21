@@ -7,8 +7,8 @@
 echo="hello"
 log "collin_ph: audiofix enabled, starting up"
 . /system/etc/batt.conf
-#if "$enabled" -gt "0" > /dev/nul
-# then
+if "$enabled" -gt "0" > /dev/nul
+ then
 #if "$audio_fix" -gt "0" > /dev/nul
 #   then
 #	 log "collin_ph: audiofix enabled, disabling stagefright"
@@ -42,13 +42,13 @@ mount -o $1 / -t rootfs
 mount -o $1 /dev -t devpts
 mount -o $1 /proc -t proc
 mount -o $1 /sys -t sysfs
-mount -o $1 /mnt/asec -t tmpfs
+#mount -o $1 /mnt/asec -t tmpfs
 mount -o $1 /system -t rfs
 mount -o $1 /data -t rfs
 mount -o $1 /cache -t rfs
 mount -o $1 /sdcard -t vfat
-mount -o $1 /mnt/secure/asec -t vfat
-mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
+#mount -o $1 /mnt/secure/asec -t vfat
+#mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 }
 log "collin_ph: status is here the problem???!2"
 
