@@ -9,20 +9,11 @@
 . /system/etc/batt.conf
 if [ "$enabled" -gt "0" ] 
  then
-if [ "$audio_fix" -gt "0" ]
-   then
-	 log "collin_ph: audiofix enabled, disabling stagefright"
-	 setprop media.stagefright.enable-player false
-	 else
-	 log "collin_ph: audiofix disabled, enabling stagefright"
-	 setprop media.stagefright.enable-player true
-fi
-	  
+  
  
  
 #Initialization variables
 #Dont mess with these.
-CFSstate="unknown!"
 charging_source="unknown!"
 last_source="unknown";
 batt_life=0;
@@ -41,55 +32,25 @@ mount -o $1 / -t rootfs
 mount -o $1 /dev -t devpts
 mount -o $1 /proc -t proc
 mount -o $1 /sys -t sysfs
-mount -o $1 /mnt/asec -t tmpfs
-mount -o $1 /system -t yaffs2
-mount -o $1 /data -t yaffs2
-mount -o $1 /cache -t yaffs2
-mount -o $1 /mnt/sdcard -t vfat
-mount -o $1 /mnt/secure/asec -t vfat
-mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
-}
-
-launchCFStweaks()
-{
-navPID=`pidof "com.google.android.apps.maps:driveabout"`
-if [ "$navPID" ] 
- then 
- disableCFStweaks "Disabling CFS Tweaks, GPS Navigation detected.";
- else
- if [ "$CFSstate" != "enabled" ] 
- then
- mount -t debugfs none /sys/kernel/debug
- log "collin_ph: Changed sched_features (CFS Tweaks Enabled)"
- echo "NO_NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
- umount /sys/kernel/debug
- CFSstate="enabled"
- fi
-fi
-
-}
-disableCFStweaks()
-{
-if [ "$CFSstate" != "disabled" ]
-then
-mount -t debugfs none /sys/kernel/debug
-log "collin_ph: Changed sched_features $1"
-echo "NEW_FAIR_SLEEPERS" > /sys/kernel/debug/sched_features
-umount /sys/kernel/debug
-CFSstate="disabled"
-fi
+#mount -o $1 /mnt/asec -t tmpfs
+mount -o $1 /system -t rfs
+mount -o $1 /data -t rfs
+mount -o $1 /cache -t rfs
+mount -o $1 /sdcard -t vfat
+#mount -o $1 /mnt/secure/asec -t vfat
+#mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 }
 
 increase_battery()
 {
 log "collin_ph: Increasing Battery"
 #New Performance Tweaks
-mount -o remount,rw -t yaffs2 /dev/block/mtdblock3
-if [ $LEDfix ] 
-   then
-   echo 0 > /sys/class/leds/amber/brightness
-   echo 0 > /sys/class/leds/green/brightness
-fi
+mount -o remount,rw -t rfs /dev/block/stl9 /
+#if [ $LEDfix ] 
+#   then
+#   echo 0 > /sys/class/leds/amber/brightness
+#   echo 0 > /sys/class/leds/green/brightness
+#fi
 current_polling_interval=$polling_interval_on_battery;
 echo 0 > /proc/sys/vm/swappiness
 echo 0 > /proc/sys/vm/dirty_expire_centisecs
@@ -103,7 +64,7 @@ echo 95 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
 echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
 last_capacity=0;
 current_max_clock=$max_freq_on_battery
-mount -o remount,ro -t yaffs2 /dev/block/mtdblock3
+mount -o remount,ro -t rfs /dev/block/stl9 /
 log "collin_ph: Done Increasing Battery"
 }
 
