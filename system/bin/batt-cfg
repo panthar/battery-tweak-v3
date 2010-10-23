@@ -68,7 +68,7 @@ load_defaults()
 {
 MOUNToptions=1
 enabled=1
-cpu_max_underclock_perc=40
+cpu_max_underclock_perc=33
 cpu_limiting_method=1
 max_freq_on_battery=800000
 max_freq_on_USBpower=1000000
