@@ -60,8 +60,8 @@ echo 95 > /proc/sys/vm/dirty_ratio
 echo 10 > /proc/sys/vm/vfs_cache_pressure
 echo $max_freq_on_battery > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $min_freq_on_battery > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 95 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
-echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
+#echo 95 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
+#echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
 last_capacity=0;
 current_max_clock=$max_freq_on_battery
 mount -o remount,ro -t rfs /dev/block/stl9 /
@@ -82,8 +82,8 @@ echo 40 > /proc/sys/vm/dirty_ratio
 echo 10 > /proc/sys/vm/vfs_cache_pressure
 echo $max_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $min_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 45 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
-echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
+#echo 45 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
+#echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
 last_capacity=0;
 current_max_clock=$max_clock_on_USBpower
 #mount -o remount,ro /
@@ -103,8 +103,8 @@ echo 40 > /proc/sys/vm/dirty_ratio
 echo 10 > /proc/sys/vm/vfs_cache_pressure
 echo $max_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $min_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 50 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
-echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
+#echo 50 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
+#echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
 last_capacity=0;
 current_max_clock=$max_clock_on_power
 #mount -o remount,ro /
@@ -161,12 +161,6 @@ capacity=$(cat /sys/class/power_supply/battery/capacity);
 
 
 sleep $current_polling_interval
-	    
-
-case $CFStweaks in
-   "1") launchCFStweaks;;
-     *) disableCFStweaks "CFS Tweaks Disabled";;
-esac
 
 if [ "$charging_source" != "$last_source" ]
   then
