@@ -34,9 +34,7 @@ echoit ""
 #this may seem redundant because they are included in load_defaults
 #this is only here in case the person upgraded from a prior version
 #sets sensible defaults in that case
-audio_fix=0
-LEDfix=1
-CFStweaks=0
+
 MOUNToptions=0
 enabled=1
 #end of sensible upgrade defaults
@@ -68,21 +66,18 @@ fi
 
 load_defaults()
 {
-audio_fix=0
-LEDfix=1
 MOUNToptions=1
-CFStweaks=0
 enabled=1
-cpu_max_underclock_perc=33
+cpu_max_underclock_perc=40
 cpu_limiting_method=1
-max_freq_on_battery=691200
-max_freq_on_USBpower=691200
-polling_interval_on_battery=60
+max_freq_on_battery=800000
+max_freq_on_USBpower=1000000
+polling_interval_on_battery=90
 polling_interval_on_USBpower=15
 polling_interval_on_power=15
-min_freq_on_battery=245000
-min_freq_on_power=245000
-min_freq_on_USBpower=245000
+min_freq_on_battery=200000
+min_freq_on_power=200000
+min_freq_on_USBpower=200000
 
 
 
@@ -309,21 +304,21 @@ echoit ""
 save_settings
 }
 
-load_768()
+load_800()
 {
-echoit "Loading 768mhz defaults"
+echoit "Loading 800mhz defaults"
 load_defaults
-max_freq_on_power=768000
-max_freq_on_USBpower=768000
+max_freq_on_power=800000
+max_freq_on_USBpower=800000
 save_settings
 }
 
-load_691()
+load_1000()
 {
-echoit "Loading 691mhz defaults"
+echoit "Loading 1000mhz defaults"
 load_defaults
-max_freq_on_power=691200
-max_freq_on_USBpower=691200
+max_freq_on_power=1000000
+max_freq_on_USBpower=1000000
 save_settings
 }
 
@@ -337,12 +332,9 @@ if [ "$tpid" -gt 0 ]
  fi
 
 echoit "Saving Settings..."
-mount -o remount,rw -t yaffs2 /dev/block/mtdblock3 /system
-echo "audio_fix=$audio_fix" > /system/etc/batt.conf
-echo "CFStweaks=$CFStweaks" >> /system/etc/batt.conf
+mount -o remount,rw -t rfs /dev/block/stl9 /system
 echo "MOUNToptions=$MOUNToptions" >>  /system/etc/batt.conf
 echo "enabled=$enabled" >> /system/etc/batt.conf
-echo "LEDfix=$LEDfix" >> /system/etc/batt.conf
 echo "cpu_limiting_method=$cpu_limiting_method" >> /system/etc/batt.conf
 echo "min_freq_on_battery=$min_freq_on_battery" >> /system/etc/batt.conf
 echo "max_freq_on_battery=$max_freq_on_battery" >> /system/etc/batt.conf
@@ -354,7 +346,7 @@ echo "polling_interval_on_battery=$polling_interval_on_battery" >> /system/etc/b
 echo "polling_interval_on_power=$polling_interval_on_power" >> /system/etc/batt.conf
 echo "polling_interval_on_USBpower=$polling_interval_on_USBpower" >> /system/etc/batt.conf
 echo "cpu_max_underclock_perc=$cpu_max_underclock_perc " >> /system/etc/batt.conf
-mount -o remount,ro -t yaffs2 /dev/block/mtdblock3 /system
+mount -o remount,ro -t rfs /dev/block/stl9 /system
 
 echoit ""
 echoit "Settings Saved."
@@ -385,24 +377,16 @@ echoit ""
 echoit ""
 
 echoit "Please choose an option and press enter."
-echoit "[1] Revert to 768mhz defaults and exit"
-echoit "[2] Revert to 691mhz defaults and exit"
+echoit "[1] Revert to 800mhz defaults and exit"
+echoit "[2] Revert to 1000mhz defaults and exit"
 echoit "[3] Customize settings"
 
 
 disp=`get_disp $enabled`
 echoit "[4] $disp Battery Tweak Entirely"
-disp=`get_disp $CFStweaks`
-echoit "[5] $disp CFS Tweaks "
-disp=`get_disp $LEDfix`
-echoit "[6] $disp LED Fix (If LED Stuck)"
 disp=`get_disp $MOUNToptions`
-echoit "[7] $disp Disk Boost"
-disp=`get_disp $audio_fix`
-disp2=`toggle $audio_fix`
-disp2=`get_disp $disp2`
-echoit "[8] $disp Audio Fix ($disp2 Stagefright)"
-echoit "[9] Save Changes & Exit"
+echoit "[5] $disp Disk Boost"
+echoit "[6] Save Changes & Exit"
 echoit "[Enter]: Exit Without Saving Changes"
 read choice
 echoit ""
@@ -411,14 +395,11 @@ echoit ""
   case $choice in
         "1") load_768;;
         "2") load_691;;
-				"3") customize;;
-				"4") enabled=`toggle $enabled`;;
-				"5") CFStweaks=`toggle $CFStweaks`;;
-				"6") LEDfix=`toggle $LEDfix`;;
-        "7") MOUNToptions=`toggle $MOUNToptions`;;
-				"8") audio_fix=`toggle $audio_fix`;;
-				"9") save_settings;;
-				*) echoit "Exiting. No Changes Saved"
+	"3") customize;;
+	"4") enabled=`toggle $enabled`;;
+        "5") MOUNToptions=`toggle $MOUNToptions`;;
+	"6") save_settings;;
+	*) echoit "Exiting. No Changes Saved"
 				   exit;; 
      esac
 done
