@@ -38,7 +38,7 @@ mount -o $1 /sys -t sysfs
 mount -o $1 /system -t rfs
 mount -o $1 /data -t rfs
 mount -o $1 /cache -t rfs
-mount -o $1 /mnt/sdcard -t vfat
+#mount -o $1 /mnt/sdcard -t vfat
 #mount -o $1 /mnt/secure/asec -t vfat
 #mount -o $1 /mnt/sdcard/.android_secure -t tmpfs
 }
