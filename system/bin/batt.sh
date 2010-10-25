@@ -7,6 +7,8 @@
 #moved to /system/etc/batt.conf
 
 . /system/etc/batt.conf
+. /system/etc/batt-temp.conf
+
 if [ "$enabled" -gt "0" ] 
  then
   
@@ -66,8 +68,14 @@ last_capacity=0;
 current_max_clock=$max_freq_on_battery
 mount -o remount,ro -t rfs /dev/block/stl9 /
 log "collin_ph: Done Increasing Battery"
-}
 
+if [ "$OverHeatActive" = "0" ]
+  then
+	echo $max_freq_on_battery > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo $min_freq_on_battery > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+fi
+
+}
 increase_performanceUSB()
 {
 log "collin_ph: Increasing Performance For USB Charging"
@@ -84,6 +92,13 @@ echo $max_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_fr
 echo $min_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 #echo 45 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
 #echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
+
+if [ "$OverHeatActive" = "0" ]
+  then
+	echo $max_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo $min_freq_on_USBpower > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+fi
+
 last_capacity=0;
 current_max_clock=$max_clock_on_USBpower
 #mount -o remount,ro /
@@ -105,11 +120,21 @@ echo $max_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo $min_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 #echo 50 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
 #echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/powersave_bias
+
+if [ "$OverHeatActive" = "0" ]
+  then
+	echo $max_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo $min_freq_on_power > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+fi
+
 last_capacity=0;
 current_max_clock=$max_clock_on_power
 #mount -o remount,ro /
 log "collin_ph: Done Increasing Performance"
 }
+
+
+
 set_powersave_bias()
 {
     capacity=`expr $capacity '*' 10`
@@ -158,7 +183,7 @@ while [ 1 ]
 do
 charging_source=$(cat /sys/class/power_supply/battery/charging_source);
 capacity=$(cat /sys/class/power_supply/battery/capacity);
-
+CurrentTemp=$(cat /sys/class/power_supply/battery/batt_temp);
 
 sleep $current_polling_interval
 
@@ -188,6 +213,26 @@ if [ "$charging_source" = "0" ]
        "2") set_powersave_bias;;
     esac
 
+  fi
+fi
+
+if [ "$MaxTempEnable" = "y" ]
+  then
+  if [ "$CurrentTemp" -gt "$MaxTemp" ]
+	then
+	mount -o remount,rw -t rfs /dev/block/stl9 /system
+	echo "OverHeatActive=1" > /system/etc/batt-temp.conf
+	mount -o remount,ro -t rfs /dev/block/stl9 /system
+	echo $MaxFreqOverride > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	echo $MinFreqOverride > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	log "collin_ph: Phone is Overheating, Max Frequencies override"
+  else
+	if [ "$OverHeatActive" != "0" ]
+	      then
+		mount -o remount,rw -t rfs /dev/block/stl9 /system
+		echo "OverHeatActive=0" > /system/etc/batt-temp.conf
+		mount -o remount,ro -t rfs /dev/block/stl9 /system
+	fi
   fi
 fi
 
