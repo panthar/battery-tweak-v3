@@ -346,18 +346,18 @@ if [ "$tpid" -gt 0 ]
 echoit "Saving Settings..."
 mount -o remount,rw -t rfs /dev/block/stl9 /system
 echo "MOUNToptions=$MOUNToptions" >  /system/etc/batt.conf
-echo "enabled=$enabled" > /system/etc/batt.conf
-echo "cpu_limiting_method=$cpu_limiting_method" > /system/etc/batt.conf
-echo "min_freq_on_battery=$min_freq_on_battery" > /system/etc/batt.conf
-echo "max_freq_on_battery=$max_freq_on_battery" > /system/etc/batt.conf
-echo "min_freq_on_USBpower=$min_freq_on_USBpower" > /system/etc/batt.conf
-echo "max_freq_on_USBpower=$max_freq_on_USBpower" > /system/etc/batt.conf
-echo "min_freq_on_power=$min_freq_on_power" > /system/etc/batt.conf
-echo "max_freq_on_power=$max_freq_on_power" > /system/etc/batt.conf
-echo "polling_interval_on_battery=$polling_interval_on_battery" > /system/etc/batt.conf
-echo "polling_interval_on_power=$polling_interval_on_power" > /system/etc/batt.conf
-echo "polling_interval_on_USBpower=$polling_interval_on_USBpower" > /system/etc/batt.conf
-echo "cpu_max_underclock_perc=$cpu_max_underclock_perc " > /system/etc/batt.conf
+echo "enabled=$enabled" >> /system/etc/batt.conf
+echo "cpu_limiting_method=$cpu_limiting_method" >> /system/etc/batt.conf
+echo "min_freq_on_battery=$min_freq_on_battery" >> /system/etc/batt.conf
+echo "max_freq_on_battery=$max_freq_on_battery" >> /system/etc/batt.conf
+echo "min_freq_on_USBpower=$min_freq_on_USBpower" >> /system/etc/batt.conf
+echo "max_freq_on_USBpower=$max_freq_on_USBpower" >> /system/etc/batt.conf
+echo "min_freq_on_power=$min_freq_on_power" >> /system/etc/batt.conf
+echo "max_freq_on_power=$max_freq_on_power" >> /system/etc/batt.conf
+echo "polling_interval_on_battery=$polling_interval_on_battery" >> /system/etc/batt.conf
+echo "polling_interval_on_power=$polling_interval_on_power" >> /system/etc/batt.conf
+echo "polling_interval_on_USBpower=$polling_interval_on_USBpower" >> /system/etc/batt.conf
+echo "cpu_max_underclock_perc=$cpu_max_underclock_perc " >> /system/etc/batt.conf
 mount -o remount,ro -t rfs /dev/block/stl9 /system
 
 echoit ""
