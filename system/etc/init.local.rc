@@ -1,7 +1,3 @@
-# CyanogenMod Extras
-
-# Compcache
-# didnt need most of this
 service collin_ph /system/bin/batt.sh
     oneshot
 
