@@ -1,11 +1,10 @@
 #!/system/bin/sh
-
 echoit ()
 {
 echo "$1" | fold -s -w 45
 }
-who=`whoami`
-if [ "$who" != "root" ]
+/system/bin/id |grep root > /dev/null 2>&1
+if [ $? -ne 0 ]
  then
  echoit "batt-cfg must be ran as root."
  echoit "Press enter to attempt to run as root"
@@ -29,6 +28,20 @@ awk < /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state '{ print $1 " " }
 echoit ""
 }
 
+#show_available_schedulers()
+#{
+#echoit "Available schedulers"
+#cat /sys/block/mtdblock3/queue/scheduler
+#echo ""
+#}
+
+show_available_governors()
+{
+echoit "Available Governors:"
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+echoit ""
+}
+
 #Added USBpower definitions and options by Decad3nce
 
 #this may seem redundant because they are included in load_defaults
@@ -36,6 +49,7 @@ echoit ""
 #sets sensible defaults in that case
 
 MOUNToptions=0
+MaxTempEnable=n
 enabled=1
 #end of sensible upgrade defaults
 . /system/etc/batt.conf
@@ -66,6 +80,10 @@ fi
 
 load_defaults()
 {
+MaxTempEnable=n
+MaxTemp=420
+MaxFreqOverride=600000
+MinFreqOverride=200000
 MOUNToptions=1
 enabled=1
 cpu_max_underclock_perc=33
@@ -83,6 +101,61 @@ min_freq_on_USBpower=200000
 
 }
 
+TempManagement()
+{
+echoit ""
+echoit ""
+echoit ""
+
+echoit "Overclocking, tethering, and high usage can lead to overheating which may damage your battery in the long run. Adjusting the Max Temperature for which to cause a max frequency override will ensure the safety of your battery. Would you like to activate it? [y/n] [$MaxTempEnable]."
+read new_MaxTempEnable
+echoit ""
+case $new_MaxTempEnable in
+           "y") MaxTempEnable=y;;
+           "n") MaxTempEnable=n;;
+             *) echo "Settings unchanged";;
+esac
+
+echoit "Please set the desired max temperature at which you will allow your devices battery to run at or leave it unchanged. This value is the temperature in Celsius * 10 [$MaxTemp]"
+read new_MaxTemp
+echoit ""
+tmaxtemp=$MaxTemp
+if [ "$new_MaxTemp" ] 
+   then
+	tmaxtemp=$new_MaxTemp
+	MaxTemp=$tmaxtemp	 
+fi
+
+
+show_freq_table
+echoit "Now please set the desired frequency for which to override the min_frequency to or leave unchanged [$MinFreqOverride]"
+read new_MinFreqOverride
+echoit ""
+echoit "Now please set the desired frequency for which to override the max_frequency to or leave unchanged [$MaxFreqOverride]"
+read new_MaxFreqOverride
+echoit ""
+
+tminfreq=$MinFreqOverride
+if [ "$new_MinFreqOverride" ]
+   then
+	tminfreq=$new_MinFreqOverride
+fi
+
+tmaxfreq=$MaxFreqOverride
+if [ "$new_MaxFreqOverride" ]
+   then
+	tmaxfreq=$new_MaxFreqOverride
+fi
+
+if [ $tmaxfreq -ge $tminfreq ]
+   then
+	 MinFreqOverride=$tminfreq
+	 MaxFreqOverride=$tmaxfreq
+	 echoit "Override CPU settings accepted."
+	 else
+	 echoit "Invalid Override CPU Settings. New Override CPU settings ignored."
+fi
+}
 
 restart()
 {
@@ -129,8 +202,29 @@ echoit ""
 echoit ""
 echoit ""
 echoit ""
+echoit "The cpu scaling governor controls how/when your cpu scales on the frequency table"
+echoit "";
+
+show_available_governors
+echoit "Make a choice and hit enter, or leave blank to leave unchanged [$scaling_governor]"
+read new_scaling_governor
+echoit ""
+tscale=$scaling_governor
+if [ "$new_scaling_governor" ] 
+   then 
+   tscale=$new_scaling_governor
+fi
+scaling_governor=$tscale
+
+
+echoit ""
+echoit ""
+echoit ""
+echoit ""
+echoit ""
+echoit ""
+echoit ""
 echoit "The Min and Max frequency settings determine how fast the CPU runs. The Min frequency must be less than or equal to the Max."
-echoit "Some phones do not support settings higher than 6912000."
 echoit ""
 #no longer works. 
 #cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies
@@ -168,7 +262,7 @@ echoit ""
 echoit ""
 echoit ""
 echoit ""
-echoit "The Min and Max frequency settings determine how fast the CPU runs. The Min frequency must be less than or equal to the 480000 on USB. Some phones do not support settings higher than 691200."
+echoit "The Min and Max frequency settings determine how fast the CPU runs."
 echoit ""
 show_freq_table
 echoit ""
@@ -347,6 +441,10 @@ echoit "Saving Settings..."
 mount -o remount,rw -t rfs /dev/block/stl9 /system
 echo "MOUNToptions=$MOUNToptions" >  /system/etc/batt.conf
 echo "enabled=$enabled" >> /system/etc/batt.conf
+echo "MaxTemp=$MaxTemp" >> /system/etc/batt.conf
+echo "MaxTempEnable=$MaxTempEnable" >> /system/etc/batt.conf
+echo "MaxFreqOverride=$MaxFreqOverride" >> /system/etc/batt.conf
+echo "MinFreqOverride=$MinFreqOverride" >> /system/etc/batt.conf
 echo "cpu_limiting_method=$cpu_limiting_method" >> /system/etc/batt.conf
 echo "min_freq_on_battery=$min_freq_on_battery" >> /system/etc/batt.conf
 echo "max_freq_on_battery=$max_freq_on_battery" >> /system/etc/batt.conf
@@ -358,6 +456,7 @@ echo "polling_interval_on_battery=$polling_interval_on_battery" >> /system/etc/b
 echo "polling_interval_on_power=$polling_interval_on_power" >> /system/etc/batt.conf
 echo "polling_interval_on_USBpower=$polling_interval_on_USBpower" >> /system/etc/batt.conf
 echo "cpu_max_underclock_perc=$cpu_max_underclock_perc " >> /system/etc/batt.conf
+echo "cpu_scheduler=$cpu_scheduler" >> /system/etc/batt.conf
 mount -o remount,ro -t rfs /dev/block/stl9 /system
 
 echoit ""
@@ -400,6 +499,7 @@ echoit "[5] $disp Battery Tweak Entirely"
 disp=`get_disp $MOUNToptions`
 echoit "[6] $disp Disk Boost"
 echoit "[7] Save Changes & Exit"
+echoit "[8] Temperature Management"
 echoit "[Enter]: Exit Without Saving Changes"
 read choice
 echoit ""
@@ -413,6 +513,7 @@ echoit ""
 	"5") enabled=`toggle $enabled`;;
         "6") MOUNToptions=`toggle $MOUNToptions`;;
 	"7") save_settings;;
+        "8") TempManagement;;
 	*) echoit "Exiting. No Changes Saved"
 				   exit;; 
      esac
