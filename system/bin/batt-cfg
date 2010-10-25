@@ -308,6 +308,7 @@ load_800()
 {
 echoit "Loading 800mhz defaults"
 load_defaults
+max_freq_on_battery=800000
 max_freq_on_power=800000
 max_freq_on_USBpower=800000
 save_settings
@@ -317,7 +318,18 @@ load_1000()
 {
 echoit "Loading 1000mhz defaults"
 load_defaults
+max_freq_on_battery=1000000
 max_freq_on_power=1000000
+max_freq_on_USBpower=1000000
+save_settings
+}
+
+load_1200()
+{
+echoit "Loading 1200mhz defaults"
+load_defaults
+max_freq_on_battery=1200000
+max_freq_on_power=1200000
 max_freq_on_USBpower=1000000
 save_settings
 }
@@ -379,26 +391,28 @@ echoit ""
 echoit "Please choose an option and press enter."
 echoit "[1] Revert to 800mhz defaults and exit"
 echoit "[2] Revert to 1000mhz defaults and exit"
-echoit "[3] Customize settings"
+echoit "[3] Revert to 1200mhz defaults and exit"
+echoit "[4] Customize settings"
 
 
 disp=`get_disp $enabled`
-echoit "[4] $disp Battery Tweak Entirely"
+echoit "[5] $disp Battery Tweak Entirely"
 disp=`get_disp $MOUNToptions`
-echoit "[5] $disp Disk Boost"
-echoit "[6] Save Changes & Exit"
+echoit "[6] $disp Disk Boost"
+echoit "[7] Save Changes & Exit"
 echoit "[Enter]: Exit Without Saving Changes"
 read choice
 echoit ""
 echoit ""
 
   case $choice in
-        "1") load_768;;
-        "2") load_691;;
-	"3") customize;;
-	"4") enabled=`toggle $enabled`;;
-        "5") MOUNToptions=`toggle $MOUNToptions`;;
-	"6") save_settings;;
+        "1") load_800;;
+        "2") load_1000;;
+        "3") load_1200;;
+	"4") customize;;
+	"5") enabled=`toggle $enabled`;;
+        "6") MOUNToptions=`toggle $MOUNToptions`;;
+	"7") save_settings;;
 	*) echoit "Exiting. No Changes Saved"
 				   exit;; 
      esac
