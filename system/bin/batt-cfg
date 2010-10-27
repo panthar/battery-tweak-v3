@@ -157,6 +157,37 @@ if [ $tmaxfreq -ge $tminfreq ]
 fi
 }
 
+DRM_services()
+{
+echoit ""
+echoit ""
+echoit ""
+
+echoit "Three services are running on your epic by default that cause battery loss, you can choose to remove them or leave them alone. hit enter to leave it unchanged [remove/restore] [$DRM_Services]."
+read new_DRM_Services
+echoit ""
+case $new_DRM_Services in
+           "remove") DRMremove;;
+           "restore") DRMrestore;;
+             *) echo "settings unchanged";;
+esac
+
+}
+
+DRMremove()
+{
+mv /system/app/DrmProvider.apk /system/app/DrmProvider.apk.bak
+mv /system/app/DrmUA.apk /system/app/DrmUA.apk.bak
+mv /system/app/MediaHub.apk /system/app/MediaHub.apk.bak
+}
+
+DRMrestore()
+{
+mv /system/app/DrmProvider.apk.bak /system/app/DrmProvider.apk
+mv /system/app/DrmUA.apk.bak /system/app/DrmUA.apk
+mv /system/app/MediaHub.apk.bak /system/app/MediaHub.apk
+}
+
 restart()
 {
 echoit "Starting batt.sh"
@@ -500,6 +531,7 @@ disp=`get_disp $MOUNToptions`
 echoit "[6] $disp Disk Boost"
 echoit "[7] Save Changes & Exit"
 echoit "[8] Temperature Management"
+echoit "[9] Change DRM Services"
 echoit "[Enter]: Exit Without Saving Changes"
 read choice
 echoit ""
@@ -514,6 +546,7 @@ echoit ""
         "6") MOUNToptions=`toggle $MOUNToptions`;;
 	"7") save_settings;;
         "8") TempManagement;;
+        "9") DRM_Services;;
 	*) echoit "Exiting. No Changes Saved"
 				   exit;; 
      esac
