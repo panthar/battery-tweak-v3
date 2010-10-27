@@ -546,7 +546,7 @@ echoit ""
         "6") MOUNToptions=`toggle $MOUNToptions`;;
 	"7") save_settings;;
         "8") TempManagement;;
-        "9") DRM_Services;;
+        "9") DRM_services;;
 	*) echoit "Exiting. No Changes Saved"
 				   exit;; 
      esac
