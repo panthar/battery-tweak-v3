@@ -386,7 +386,7 @@ fi
 echoit "Enter the polling interval (in seconds) when on USB power: [$polling_interval_on_USBpower]"
 read new_polling_interval_on_USBpower
 echoit ""
-if [ "$new_polling_interval_on_battery" -gt 1 ] 
+if [ "$new_polling_interval_on_USBpower" -gt 1 ] 
    then
 	 polling_interval_on_USBpower=$new_polling_interval_on_USBpower
 else
@@ -396,7 +396,7 @@ fi
 echoit "Enter the polling interval (in seconds) when on AC power: [$polling_interval_on_power]"
 read new_polling_interval_on_power
 echoit ""
-if [ "$new_polling_interval_on_battery" -gt 1 ] 
+if [ "$new_polling_interval_on_power" -gt 1 ] 
    then
 	 polling_interval_on_power=$new_polling_interval_on_power
 else
