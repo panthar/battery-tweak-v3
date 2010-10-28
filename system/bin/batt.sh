@@ -153,7 +153,7 @@ set_powersave_bias()
     fi
 
 }
-
+log "collin_ph: checking if its here1"
 set_max_clock()
 {
     temp=`expr 100 "-" $capacity`
@@ -162,7 +162,7 @@ set_max_clock()
 		temp=`expr $temp "*" $max_freq_on_battery`
 		temp=`expr $temp "/" 100`
 		temp=`expr $max_freq_on_battery "-" $temp`
-    
+    log "collin_ph: checking if maybe its here?2"
     if [ "$temp" != "$current_max_clock" ]
        then
        current_max_clock=$temp
@@ -171,8 +171,9 @@ set_max_clock()
        log "collin_ph: Done Setting Max Clock";
     fi
 
-
+log "collin said this might work here"
 }
+log "collin said this might work here23"
 case $MOUNToptions in
    "1") launchMOUNToptions remount,noatime,nodiratime;;
      *) launchMOUNToptions remount,atime,diratime;;
